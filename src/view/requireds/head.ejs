@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%- config.page.title %></title>
+    <meta name="description" content="<%- config.page.description %>">
+    <meta name="keywords" content="<%- config.page.keywords %>">
+    <meta name="author" content="Josué Vidal">
+    <meta name="git" content="https://github.com/josuex220">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        fetch('/api', {
+            method: 'GET',
+        })
+        .then((resp) => resp.json())
+        .then(function(response) {
+            var bg = response.background.gradient === true ? `linear-gradient(${response.background.type}, ${response.background.colors.join(',')})` : response.background.colors;
+        
+            document.documentElement.style.setProperty('--bg-background',bg);
+            document.documentElement.style.setProperty('--text-color',response.text_color);
+            document.documentElement.style.setProperty('--box-color',response.box);
+            document.documentElement.style.setProperty('--primary-color',response.details_color);
+
+            var abas = ['linkedin', 'youtube', 'website', 'instagram', 'whatsapp', 'email'];
+            var links= ['https://www.linkedin.com/in/', 'https://youtube.com/channel/', '', 'https://www.instagram.com/', "https://api.whatsapp.com/send?phone=", "mailto://"]
+            var media = "<ul class='contacts'>";
+            for (let i = 0; i < abas.length; i++) {
+                var social = response[abas[i]];
+               if(social.source != '' && social.source != undefined && social.source != false){
+                    var source = social.source;
+                    var target = social.target ? 'target="_blank"' : '';
+                    var icone = "";
+                    switch (abas[i]) {
+                        case 'linkedin':
+                            icone = '<i class="fa-brands fa-linkedin-in"></i>';
+                            break;
+                        case 'youtube':
+                            icone = '<i class="fa-brands fa-youtube"></i>';
+                            break;
+                        case 'website':
+                            icone = '<i class="fa-solid fa-arrow-up-right-from-square"></i>';
+                            break;
+                        case 'instagram':
+                            icone = '<i class="fa-brands fa-instagram"></i>';
+                            break;
+                        case 'whatsapp':
+                            icone = '<i class="fa-brands fa-whatsapp"></i>';
+                            break;
+                        case 'email':
+                            icone = '<i class="fa-solid fa-envelope"></i>';
+                            break;
+                    }
+                   media += `<a href="${links[i]}${source}" ${target} ><li>${icone} ${abas[i]}</li></a>`
+               }
+            }
+            media += "</ul>";
+            var details = document.getElementById('contacts-details');
+            details.innerHTML = media;
+        });
+        
+    </script>
+    
+    <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body>
